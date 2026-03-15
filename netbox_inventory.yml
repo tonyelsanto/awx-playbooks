@@ -1,0 +1,11 @@
+plugin: netbox.netbox.nb_inventory
+
+api_endpoint: http://172.30.60.160:8000
+token: eHd5pVP27kEKW0whc2ie7v46qH15fYSeGMqA44d3
+
+validate_certs: false
+
+group_by:
+  - device_roles
+  - platforms
+  - sites
