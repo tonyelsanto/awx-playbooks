@@ -1,0 +1,22 @@
+---
+- name: Check updates
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Count upgradable packages
+      ansible.builtin.shell: |
+        apt list --upgradable 2>/dev/null | tail -n +2 | wc -l
+      register: updates_count
+      changed_when: false
+
+    - name: Show result
+      ansible.builtin.debug:
+        msg: "Updates available: {{ updates_count.stdout }}"
