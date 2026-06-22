@@ -1,0 +1,15 @@
+---
+- name: Check sudo
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Show current user
+      ansible.builtin.command: whoami
+      register: current_user
+      changed_when: false
+
+    - name: Show result
+      ansible.builtin.debug:
+        var: current_user.stdout
