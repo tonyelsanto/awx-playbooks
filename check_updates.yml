@@ -1,7 +1,8 @@
 ---
-- name: Check updates
+- name: Check updates (production base)
   hosts: all
   become: true
+  gather_facts: true
 
   tasks:
 
@@ -11,12 +12,16 @@
         cache_valid_time: 3600
       changed_when: false
 
-    - name: Count upgradable packages
-      ansible.builtin.shell: |
-        apt list --upgradable 2>/dev/null | grep -v "Listing..." | wc -l
-      register: updates_count
+    - name: Get upgradable packages list
+      ansible.builtin.command: apt list --upgradable
+      register: apt_updates
       changed_when: false
+      failed_when: false
+
+    - name: Count updates
+      ansible.builtin.set_fact:
+        updates_count: "{{ apt_updates.stdout_lines | length - 1 }}"
 
     - name: Show result
       ansible.builtin.debug:
-        msg: "Updates available: {{ updates_count.stdout }}"
+        msg: "Updates available: {{ updates_count }}"
