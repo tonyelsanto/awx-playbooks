@@ -26,8 +26,13 @@
       ansible.builtin.set_fact:
         updates_count: "{{ upgradable_packages | length }}"
 
-    - name: Show result
+    - name: Show summary
       ansible.builtin.debug:
         msg:
+          - "Host: {{ inventory_hostname }}"
           - "Updates available: {{ updates_count }}"
-          - "{{ upgradable_packages }}"
+
+    - name: Show package list
+      ansible.builtin.debug:
+        var: upgradable_packages
+      when: updates_count | int > 0
