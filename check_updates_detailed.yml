@@ -18,6 +18,16 @@
       changed_when: false
       failed_when: false
 
-    - name: Show updates
+    - name: Build package list
+      ansible.builtin.set_fact:
+        upgradable_packages: "{{ apt_updates.stdout_lines[1:] }}"
+
+    - name: Count packages
+      ansible.builtin.set_fact:
+        updates_count: "{{ upgradable_packages | length }}"
+
+    - name: Show result
       ansible.builtin.debug:
-        var: apt_updates.stdout_lines
+        msg:
+          - "Updates available: {{ updates_count }}"
+          - "{{ upgradable_packages }}"
