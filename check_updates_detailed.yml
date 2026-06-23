@@ -1,0 +1,23 @@
+---
+- name: Check updates detailed
+  hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      changed_when: false
+
+    - name: Get upgradable packages
+      ansible.builtin.command: apt list --upgradable
+      register: apt_updates
+      changed_when: false
+      failed_when: false
+
+    - name: Show updates
+      ansible.builtin.debug:
+        var: apt_updates.stdout_lines
